@@ -27,6 +27,8 @@ public class Crop {
         String MAX_Y = "max_y";
         String AS_PNG = "as_png";
         String ERROR = "error";
+        String DEFAULT_CROP_SIZE_WIDTH_RATE = "default_crop_width_rate";
+        String DEFAULT_CROP_SIZE_HEIGHT_RATE = "default_crop_height_rate";
     }
 
     private Intent cropIntent;
@@ -45,6 +47,18 @@ public class Crop {
         cropIntent = new Intent();
         cropIntent.setData(source);
         cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, destination);
+    }
+
+    /**
+     * Set default size rate for crop area
+     *
+     * @param width Aspect X
+     * @param height Aspect Y
+     */
+    public Crop withDefaultCropSizeRate(float width, float height) {
+        cropIntent.putExtra(Extra.DEFAULT_CROP_SIZE_WIDTH_RATE, width);
+        cropIntent.putExtra(Extra.DEFAULT_CROP_SIZE_HEIGHT_RATE, height);
+        return this;
     }
 
     /**

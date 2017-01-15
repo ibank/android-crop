@@ -68,6 +68,9 @@ public class CropImageActivity extends MonitoredActivity {
     private CropImageView imageView;
     private HighlightView cropView;
 
+    private float defaultCropSizeRateWidth = 0;
+    private float defaultCropSizeRateHeight = 0;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -128,6 +131,8 @@ public class CropImageActivity extends MonitoredActivity {
             maxY = extras.getInt(Crop.Extra.MAX_Y);
             saveAsPng = extras.getBoolean(Crop.Extra.AS_PNG, false);
             saveUri = extras.getParcelable(MediaStore.EXTRA_OUTPUT);
+            defaultCropSizeRateWidth = extras.getFloat(Crop.Extra.DEFAULT_CROP_SIZE_WIDTH_RATE, 0);
+            defaultCropSizeRateHeight = extras.getFloat(Crop.Extra.DEFAULT_CROP_SIZE_HEIGHT_RATE, 0);
         }
 
         sourceUri = intent.getData();
@@ -240,6 +245,14 @@ public class CropImageActivity extends MonitoredActivity {
                 } else {
                     cropWidth = cropHeight * aspectX / aspectY;
                 }
+            } else {
+                if(defaultCropSizeRateWidth != 0) {
+                    cropWidth = (int)(width * defaultCropSizeRateWidth);
+                }
+
+                if(defaultCropSizeRateHeight != 0) {
+                    cropHeight = (int)(height * defaultCropSizeRateHeight);
+                }
             }
 
             int x = (width - cropWidth) / 2;
@@ -251,7 +264,7 @@ public class CropImageActivity extends MonitoredActivity {
         }
 
         public void crop() {
-            handler.post(new Runnable() {
+            handler.postDelayed(new Runnable() {
                 public void run() {
                     makeDefault();
                     imageView.invalidate();
@@ -260,7 +273,7 @@ public class CropImageActivity extends MonitoredActivity {
                         cropView.setFocus(true);
                     }
                 }
-            });
+            }, 100);
         }
     }
 
